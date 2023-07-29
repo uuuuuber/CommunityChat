@@ -1,0 +1,67 @@
+$themes: (
+  light: (
+    textColor: #000,
+    bg: white,
+    logo: darkblue,
+    bgSoft: #f6f3f3,
+    textColorSoft: #555,
+    border: lightgray,
+  ),
+  dark: (
+    textColor: whitesmoke,
+    bg: #222,
+    logo: white,
+    bgSoft: #333,
+    textColorSoft: lightgray,
+    border: #444,
+  ),
+);
+
+@mixin themify($themes) {
+  @each $theme, $map in $themes {
+    .theme-#{$theme} & {
+      $theme-map: () !global;
+      @each $key, $submap in $map {
+        $value: map-get(map-get($themes, $theme), "#{$key}");
+        $theme-map: map-merge(
+          $theme-map,
+          (
+            $key: $value,
+          )
+        ) !global;
+      }
+      @content;
+      $theme-map: null !global;
+    }
+  }
+}
+
+@function themed($key) {
+  @return map-get($theme-map, $key);
+}
+
+@mixin mobile {
+  @media (max-width: 480px) {
+    @content;
+  }
+}
+@mixin tablet {
+  @media (max-width: 960px) {
+    @content;
+  }
+}
+
+/*
+这段SCSS代码定义了一个主题系统和几个Mixin，用于定制化网页的样式。以下是对该代码的解释：
+
+1. `$themes`: 这是一个存储主题的映射列表。它包含两个主题：`light`和`dark`。每个主题都有一系列的颜色变量。
+
+2. `@mixin themify($themes)`: 这是一个Mixin，用于根据给定的主题映射列表来生成主题相关的样式。它接受一个名为`$themes`的参数，表示主题映射列表。
+通过使用`@each`循环，它遍历每个主题和它们对应的映射。在循环中，它为当前主题创建一个包含所有变量值的新的全局变量`$theme-map`。然后，在`@content`中插入主题相关的样式。最后，将`$theme-map`重置为`null`，以避免变量泄漏。
+
+3. `@function themed($key)`: 这是一个函数，用于在样式中获取特定主题的变量值。它接受一个名为`$key`的参数，表示要获取的变量名。它使用`map-get`函数从当前主题的`$theme-map`中获取变量值，并通过`@return`返回。
+
+4. `@mixin mobile`和`@mixin tablet`: 这是两个Mixin，用于定义响应式样式。它们创建了一个媒体查询，根据设备屏幕的宽度来应用特定的样式。在媒体查询中，使用`@content`插入具体的样式定义。
+
+综上所述，这段SCSS代码提供了一个主题系统，通过定义主题映射列表和相关的Mixin来生成主题相关的样式。它还包含了两个响应式样式的Mixin，用于根据设备屏幕的宽度应用不同的样式。开发者可以根据具体的需求，使用这些Mixin和函数来实现样式的定制化和响应式设计。
+*/
