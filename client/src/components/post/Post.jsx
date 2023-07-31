@@ -13,6 +13,7 @@ import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { makeRequest } from "../../axios";
 import { useContext } from "react";
 import { AuthContext } from "../../context/authContext";
+import { useCustomQuery } from "../../hooks";
 
 const Post = ({ post }) => {
   moment.locale('zh-cn');
@@ -22,11 +23,7 @@ const Post = ({ post }) => {
 
   const { currentUser } = useContext(AuthContext);
 
-  const { isLoading, error, data } = useQuery(["likes", post.id], () =>
-    makeRequest.get("/likes?postId=" + post.id).then((res) => {
-      return res.data;
-    })
-  );
+const { isLoading, error, data } = useCustomQuery("likes", post.id, `/likes?postId=${post.id}`);
 
   const queryClient = useQueryClient();
 
